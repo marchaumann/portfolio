@@ -1,0 +1,113 @@
+body {
+	margin:0;
+	padding:0;
+	width:100%;
+	height:100%;
+	background:black;
+	overflow:hidden;
+	cursor:default;
+	font-family:helvetica;
+	font-weight:400;
+	text-align:left;
+}
+
+img {
+	min-width:100%;
+	min-height:100%;
+}
+
+#caption {
+	width:600px;
+	position:fixed;
+	bottom:0;
+	right:10px;
+	z-index:3;
+	padding:30px;
+	font-size:115px;
+	font-weight:700;
+	text-align:right;
+	
+}
+
+a {
+	text-decoration:none;
+	outline:none;
+}
+
+#question {
+	width:250px;
+	height:200px;
+	position:fixed;
+	top:0;
+	left:15px;
+	z-index:20;
+	padding:20px;
+	font-size:105px;
+	font-weight:700;
+}
+
+#info {
+	position:fixed;
+	z-index:5;
+	top:20%;
+	left:40px;
+	font-family:georgia;
+	font-style:italic;	
+	color:white;
+}
+
+#infoback {
+	width:100%;
+	height:100%;
+	position:fixed;
+	z-index:4;
+	background-image:url('translucent-black.png');
+	background-repeat:repeat;
+}
+
+#info h1 {
+	font-weight:400;
+	font-size:45px;
+	margin:0 0 0.6em 0;
+}
+#info h2 {
+	font-weight:400;
+	font-size:16px;
+	line-height:1.4em;
+	color:#bbb;
+}
+
+#info a {color:white;}
+#info a:hover {color:#bbb;}
+
+#credits, #credits a:hover {
+	font-size:13px;
+	line-height:1.3em;
+	color:#bbb;
+}
+
+a.red {color:transparent;}
+a.red:hover {color:red;}
+
+a.orange {color:transparent;}
+a.orange:hover {color:#f60;}
+
+a.yellow {color:transparent;}
+a.yellow:hover {color:yellow;}
+
+a.magenta {color:transparent;}
+a.magenta:hover {color:magenta;}
+
+a.green {color:transparent;}
+a.green:hover {color:#1d0;}
+
+a.blue {color:transparent;}
+a.blue:hover {color:#29f;}
+
+a.purple {color:transparent;}
+a.purple:hover {color:#6800e8;}
+
+a.white {color:white;}
+
+.hidden {visibility:hidden;}
+.shown {visibility:visible;}

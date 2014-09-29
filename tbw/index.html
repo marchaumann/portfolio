@@ -1,0 +1,219 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--   
+  `..                       
+  `..   `.                  
+`.`. `.   `.. `..  `..   `..
+  `..  `.. `..  `.. `.. `.. 
+  `..  `.. `..  `..   `...  
+  `..  `.. `..  `..    `..  
+   `.. `..`...  `..   `..   
+                    `..     
+`..                                   `..                               
+`..                                   `..  `..      `.                  
+`..      `. `...   `..       `..    `.`. `.`..        `.. `..     `..   
+`.. `..   `..    `.   `..  `..  `..   `..  `. `.   `.. `..  `.. `..  `..
+`..   `.. `..   `..... `..`..   `..   `..  `..  `..`.. `..  `..`..   `..
+`..   `.. `..   `.        `..   `..   `..  `.   `..`.. `..  `.. `..  `..
+`.. `..  `...     `....     `.. `...   `.. `..  `..`..`...  `..     `.. 
+                                                                 `..    
+                              `..     `..       
+                              `..     `..       
+`..     `...   `..    `. `... `..     `.. `.... 
+ `..  .  `.. `..  `..  `..    `.. `.. `..`..    
+ `.. `.  `..`..    `.. `..    `..`.   `..  `... 
+ `. `. `.`.. `..  `..  `..    `..`.   `..    `..
+`...    `...   `..    `...   `... `.. `..`.. `..
+-->
+<!-- created october 2009 -->
+<html xml:lang="en" lang="en">
+	<head>
+		<title>t b w</title>
+		<link rel="icon" href="/favicon.ico" type="image/x-icon"/>
+		<link rel="stylesheet" type="text/css" href="style.css" />
+		<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+		<script type="text/javascript">
+			var num=0;
+			var logo;
+			var myimages = new Array();
+			var toggle = 'off';
+			var t = 'off';
+
+			imgArray = [
+				['holdingasunset.jpg'],  
+				['glass.jpg'],
+				['beyondthecarpet.jpg'],
+				['darkwater.jpg'],
+				['featherglow.jpg'],
+				['goldwind.jpg'],
+				['mutedrainbows.jpg'],
+				['nightdew.jpg'],
+				['pillhole.jpg'],
+				['pineneedles.jpg'],
+				['rotiron.jpg'],
+				['securityofficer.jpg'],
+				['shoestied.jpg'],
+				['starsinredwater.jpg'],
+				['steelwebs.jpg'],
+				['thornglow.jpg'],
+				['leafglow.jpg'],
+				['citydistant.jpg'],
+				['bubblefeet.jpg'],
+				['gravelocean.jpg'],
+			]
+
+			function preloading() {
+				loading = new Image(); loading.src = "black.gif";
+				for (x=0; x<imgArray.length; x++){
+				myimages[x] = new Image();
+				myimages[x].src = imgArray[x];
+				}
+			}
+			
+			preloading();
+			
+			function slidestart(num) {
+			 	setTimeout("document.getElementById('gallery-img').src=imgArray[" + num + "]",10);
+				opacity('gallery', 0, 100, 900);
+			}
+			
+			function toggleinfo() {
+				if (toggle == 'off') {
+			 		$(function() {
+						$("#info").addClass("shown")
+						.removeClass("hidden");
+						$("#infoback").addClass("shown")
+						.removeClass("hidden");
+					});toggle = 'on';}
+				else {
+					$(function() {
+						$("#info").addClass("hidden")
+						.removeClass("shown");
+						$("#infoback").addClass("hidden")
+						.removeClass("shown");
+						$("#credits").addClass("hidden")
+						.removeClass("shown");
+					});toggle = 'off';t = 'off';}	
+			}
+			
+			function credits() {
+				if (t == 'off') {
+			 		$(function() {
+						$("#credits").addClass("shown")
+						.removeClass("hidden");
+					});t = 'on';}
+				else {
+					$(function() {
+						$("#credits").addClass("hidden")
+						.removeClass("shown");
+					});t = 'off';}	
+
+			}
+			
+			function slide(num) {
+				setTimeout("document.getElementById('gallery-img').src=imgArray[" + num + "]",200);
+			 	$(function() {
+					$("#" + num).addClass("white")
+				});
+				opacity('gallery', 100, 0, 200);
+				delayOpac();
+			}
+			
+			
+			
+			//------------------------
+			
+			function opacity(id, opacStart, opacEnd, millisec) { 
+			    //speed for each frame 
+			    var speed = Math.round(millisec / 100); 
+			    var timer = 0; 
+			
+			    //determine the direction for the blending, if start and end are the same nothing happens 
+			    if(opacStart > opacEnd) { 
+			        for(i = opacStart; i >= opacEnd; i--) { 
+			            setTimeout("changeOpac(" + i + ",'" + id + "')",(timer * speed)); 
+			            timer++; 
+			        } 
+			    } else if(opacStart < opacEnd) { 
+			        for(i = opacStart; i <= opacEnd; i++) 
+			            { 
+			            setTimeout("changeOpac(" + i + ",'" + id + "')",(timer * speed)); 
+			            timer++; 
+			        } 
+			    } 
+			}
+			
+			function delayOpac() {
+				setTimeout("opacity('gallery', 0, 100, 600)",200);
+			}
+			
+			//change the opacity for different browsers 
+			function changeOpac(opacity, id) { 
+			    var object = document.getElementById(id).style; 
+			    object.opacity = (opacity / 100); 
+			    object.MozOpacity = (opacity / 100); 
+			    object.KhtmlOpacity = (opacity / 100); 
+			    object.filter = "alpha(opacity=" + opacity + ")"; 
+			}
+			
+			 function audio(sound) {
+			 	document.getElementById(sound).innerHTML="<embed src='"+sound+"' hidden=true autostart=true loop=false/>";
+			 }
+			 $(document).ready(function(){
+					$(function(){
+						$.extend($.fn.disableTextSelect = function() {
+						return this.each(function(){
+							if($.browser.mozilla){//Firefox
+								$(this).css('MozUserSelect','none');
+							}else if($.browser.msie){//IE
+								$(this).bind('selectstart',function(){return false;});
+							}else{//Opera, etc.
+								$(this).mousedown(function(){return false;});
+							}
+						});
+					});
+					$('.noselect').disableTextSelect();//No text selection on elements with a class of 'noselect'
+				});  
+			});
+		</script> 
+	</head>
+	<body onload="slidestart(0);" class="noselect">
+		<div id="caption"><a id="1" class="yellow" href="javascript:void(0);" onClick="slide(1);audio('50624__vibe_crc__pouring_water_in_glass1.mov');">t</a><a id="2" class="orange" href="javascript:void(0);" onClick="slide(2)">i</a><a id="3" class="magenta" href="javascript:void(0);" onClick="slide(3);audio('26472__borje__wave_ripple.mov');">n</a><a id="4" class="green" href="javascript:void(0);" onClick="slide(4)">y</a> <a id="5" class="red" href="javascript:void(0);" onClick="slide(5);audio('38976__Uganda__WIND_Wind_through_Wheatfield.mov');">b</a><a id="6" class="blue" href="javascript:void(0);" onClick="slide(6);audio('15361__hanstimm__bowlHTc.mov');">r</a><a id="7" class="green" href="javascript:void(0);" onClick="slide(7)">e</a><a id="8" class="yellow" href="javascript:void(0);" onClick="slide(8);audio('52200__sentryx86__Pill_Bottle.mov');">a</a><a id="9" class="orange" href="javascript:void(0);" onClick="slide(9)">t</a><a id="10" class="purple" href="javascript:void(0);" onClick="slide(10);audio('60610__morgantj__swing.mov');">h</a><a id="11" class="red" href="javascript:void(0);" onClick="slide(11);audio('15883__JonathanJansen__Shaking_a_belt.mov');">i</a><a id="12" class="blue" href="javascript:void(0);" onClick="slide(12);audio(document.a12);">n</a><a id="13" class="yellow" href="javascript:void(0);" onClick="slide(13);audio('45521__digifishmusic__Scuba_1.mov');">g</a> <a id="14" class="blue" href="javascript:void(0);" onClick="slide(14);audio('73031__Two13__Homemade_Chimes.mov');">w</a><a id="15" class="magenta" href="javascript:void(0);" onClick="slide(15)">o</a><a id="16" class="green" href="javascript:void(0);" onClick="slide(16);audio('69760__Benboncan__Wind_In_Bamboo.mov');">r</a><a id="17" class="yellow" href="javascript:void(0);" onClick="slide(17);audio('76998__digitopia__09_07_11_0736_down_on_Ponte_Dom_Luis_I.mov');">l</a><a id="18" class="red" href="javascript:void(0);" onClick="slide(18);audio('56532__juskiddink__seagulls_waves_july08_1of4_freesond.mov');">d</a><a id="19" class="purple" href="javascript:void(0);" onClick="slide(19);audio('28238__HerbertBoland__Footsteps.mov');">s</a></div>
+		<a class="magenta" href="javascript:void(0);" onClick="toggleinfo()"><div id="question">?</div></a>
+		<div id="infoback" onClick="toggleinfo()" class="hidden"></div>
+		<div id="info" class="hidden"><h1>explore with your mouse<br />and turn up the volume</h1><h2>photographs by <a href="http://marchaumann.net/">marc haumann</a><br /><!--music  (<a href="#" onClick="document.a0.Play();">on</a>/<a href="#" onClick="document.a0.Stop();">off</a>) by <a href="http://www.hammockmusic.com/">hammock</a>.<br />-->audio from <a href="http://www.freesound.org/">thefreesoundproject</a><br />view the <a href="http://issuu.com/marc.haumann/docs/tbw">book</a><br /><br />(<a href="javascript:void(0);" onClick="credits();">full credits</a>)</h2>
+			<div id="credits" class="hidden">
+				<a href="http://www.freesound.org/samplesViewSingle.php?id=50624">pouring water in glass 1</a> &nbsp;vibe_crc<br />
+				<a href="http://www.freesound.org/samplesViewSingle.php?id=26472">wave ripple</a> &nbsp;borje<br />
+				<a href="http://www.freesound.org/samplesViewSingle.php?id=38976">WIND, wind through wheatfield</a> &nbsp;Uganda<br />
+				<a href="http://www.freesound.org/samplesViewSingle.php?id=15361">bowlHTc</a> &nbsp;hanstimm<br />
+				<a href="http://www.freesound.org/samplesViewSingle.php?id=52200">Pill Bottle</a> &nbsp;sentryx86<br />
+				<a href="http://www.freesound.org/samplesViewSingle.php?id=60610">swing</a> &nbsp;morgantj<br />
+				<a href="http://www.freesound.org/samplesViewSingle.php?id=15883">Shaking a belt</a> &nbsp;JonathanJansen<br />
+				<a href="http://www.freesound.org/samplesViewSingle.php?id=45521">Scuba 1</a> &nbsp;digifishmusic<br />
+				<a href="http://www.freesound.org/samplesViewSingle.php?id=73031">Homemade-Chimes</a> &nbsp;Two13<br />
+				<a href="http://www.freesound.org/samplesViewSingle.php?id=69760">Wind in Bamboo</a> &nbsp;Benboncan<br />
+				<a href="http://www.freesound.org/samplesViewSingle.php?id=76998">09-07-11_0736_down on Ponte Dom Luis I</a> &nbsp;digitopia<br />
+				<a href="http://www.freesound.org/samplesViewSingle.php?id=56532">seagulls.....waves....july08...1of4..freesond..wav</a> &nbsp;justkiddink<br />
+				<a href="http://www.freesound.org/samplesViewSingle.php?id=28238">Footsteps</a> &nbsp;HerbertBoland
+			</div>
+		</div>
+		<div id="gallery"><img id="gallery-img" src="black.gif"/></div>
+		<!--<embed name="a0" volume="14" autoplay="true" loop="true" src="threesisters.mov" />-->
+		<div id="audioplayer">
+			<div id="50624__vibe_crc__pouring_water_in_glass1.mov"></div>
+			<div id="26472__borje__wave_ripple.mov"></div>
+			<div id="38976__Uganda__WIND_Wind_through_Wheatfield.mov"></div>
+			<div id="15361__hanstimm__bowlHTc.mov"></div>
+			<div id="52200__sentryx86__Pill_Bottle.mov"></div>
+			<div id="60610__morgantj__swing.mov"></div>
+			<div id="15883__JonathanJansen__Shaking_a_belt.mov"></div>
+			<div id="45521__digifishmusic__Scuba_1.mov"></div>
+			<div id="73031__Two13__Homemade_Chimes.mov"></div>
+			<div id="69760__Benboncan__Wind_In_Bamboo.mov"></div>
+			<div id="76998__digitopia__09_07_11_0736_down_on_Ponte_Dom_Luis_I.mov"></div>
+			<div id="56532__juskiddink__seagulls_waves_july08_1of4_freesond.mov"></div>
+			<div id="28238__HerbertBoland__Footsteps.mov"></div>
+		</div>
+	</body>
+</html>
