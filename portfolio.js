@@ -1,9 +1,11 @@
+var initialX = 0;
+
 function slides(id,pos) {
     $('#'+id+' .slidecaption:not(.single)').removeClass('shown');
     $('#'+id).find('.slidecaption').eq(pos).addClass('shown');
     $('#'+id).find('.slides li').removeClass('shown');
     $('#'+id).find('.slides li').eq(pos).addClass('shown');
-    $('#'+id+' .slides ul').css('margin-left',-(pos*$('.slides li').width()));
+    $('#'+id+' .slides ul').css('-webkit-transform','translateX('+(-(pos*$('.slides li').width()))+'px)');
     $('#'+id+' .dots span').eq(pos).addClass('active').siblings().removeClass('active');
 };
 
@@ -27,15 +29,72 @@ function onOrientationChange(){
         break; 
     }
 };
+// thanks to @ryuutatsuo on stackoverflow for the touch handler function! http://stackoverflow.com/questions/5186441/javascript-drag-and-drop-for-touch-devices
+
+function touchHandler(event) {
+    var touch = event.changedTouches[0];
+    console.log(touch);
+    var simulatedEvent = document.createEvent("MouseEvent");
+    simulatedEvent.initMouseEvent({
+        touchstart: "mousedown",
+        touchmove: "mousemove",
+        touchend: "mouseup"
+    }[event.type], true, true, window, 1,
+        touch.screenX, touch.screenY,
+        touch.clientX, touch.clientY, false,
+        false, false, false, 0, null);
+
+    touch.target.dispatchEvent(simulatedEvent);
+    // console.log(simulatedEvent)
+    if (touch.target.offsetParent.className == "slides") {
+      // event.preventDefault();
+      var eventID = $(touch.target).parents('article').attr('id');
+      var pos = $('#'+eventID+' .slides ul').find('.shown').prevAll().length;
+      // console.log($(window).outerWidth());
+      if (simulatedEvent.type == "mousedown") {
+        initialX = touch.screenX;
+        // console.log(initialX);
+        $('#'+eventID+' .slides ul').addClass('notransition');
+      }
+      if (simulatedEvent.type == "mousemove") {
+        // console.log(initialX+", "+touch.screenX);
+        $('#'+eventID+' .slides ul').css('-webkit-transform','translateX('+(-(pos*$('.slides li').width())+touch.screenX-initialX)+'px)');
+      }
+      if (simulatedEvent.type == "mouseup") {
+      $('#'+eventID+' .slides ul').removeClass('notransition');
+        if (initialX - touch.screenX >= 0) {
+          if (pos+1!==$('#'+eventID+' .slides ul').find('li').length) {
+            pos++
+          } 
+        }
+        else {
+          pos--
+          if (pos<0) {
+            pos = 0
+          }
+        }
+        slides(eventID, pos)
+      }
+    }   
+}
+
+function init() {
+    document.addEventListener("touchstart", touchHandler, true);
+    document.addEventListener("touchmove", touchHandler, true);
+    document.addEventListener("touchend", touchHandler, true);
+    document.addEventListener("touchcancel", touchHandler, true);
+}
+
 window.addEventListener('orientationchange', onOrientationChange);
 //initial execution on load
 onOrientationChange();
 
 $(document).ready(function(){	
+  init()
     //once first image is loaded, show it and remove loading graphic
 	$('.slides').each(function(){
 	    $(this).find('img').load(function(){
-	        $(this).parents('li').addClass('shown');
+	        $(this).parents('.slides').find('li:first-child').addClass('shown');
             $(this).parents('article').find('.slidecaption').eq(0).addClass('shown');
 	    });
 	});
@@ -43,7 +102,7 @@ $(document).ready(function(){
 	$('.slides:not(.single)').click(function(){
         id = $(this).parents('article').attr('id');
         //for clicking image once on the last slide
-        if($(this).find('.shown').prevAll().length+1==$(this).children().length){
+        if($(this).find('.shown').prevAll().length+1==$(this).find('li').length){
             pos=0;
         }
         else {
