@@ -1,4 +1,7 @@
 var initialX = 0;
+var initialTranslation = 0;
+var currentTranslation = 0;
+var direction = 0;
 
 function slides(id,pos) {
     $('#'+id+' .slidecaption:not(.single)').removeClass('shown');
@@ -29,60 +32,44 @@ function onOrientationChange(){
         break; 
     }
 };
-// thanks to @ryuutatsuo on stackoverflow for the touch handler function! http://stackoverflow.com/questions/5186441/javascript-drag-and-drop-for-touch-devices
 
 function touchHandler(event) {
     var touch = event.changedTouches[0];
-    console.log(touch);
-    var simulatedEvent = document.createEvent("MouseEvent");
-    simulatedEvent.initMouseEvent({
-        touchstart: "mousedown",
-        touchmove: "mousemove",
-        touchend: "mouseup"
-    }[event.type], true, true, window, 1,
-        touch.screenX, touch.screenY,
-        touch.clientX, touch.clientY, false,
-        false, false, false, 0, null);
-
-    touch.target.dispatchEvent(simulatedEvent);
-    // console.log(simulatedEvent)
+    // console.log(touch);
     if (touch.target.offsetParent.className == "slides") {
       // event.preventDefault();
       var eventID = $(touch.target).parents('article').attr('id');
       var pos = $('#'+eventID+' .slides ul').find('.shown').prevAll().length;
-      // console.log($(window).outerWidth());
-      if (simulatedEvent.type == "mousedown") {
+      // console.log(pos);
+      if (event.type == "touchstart") {
         initialX = touch.screenX;
         // console.log(initialX);
         $('#'+eventID+' .slides ul').addClass('notransition');
       }
-      if (simulatedEvent.type == "mousemove") {
-        // console.log(initialX+", "+touch.screenX);
-        $('#'+eventID+' .slides ul').css('-webkit-transform','translateX('+(-(pos*$('.slides li').width())+touch.screenX-initialX)+'px)');
+      if (event.type == "touchmove") {
+        currentTranslation = initialX - touch.screenX;
+        console.log(initialTranslation+", "+currentTranslation)
+        $('#'+eventID+' .slides ul').css('-webkit-transform','translateX('+(-(pos*$('.slides li').width()+currentTranslation))+'px)');
+        direction = currentTranslation - initialTranslation;
+        initialTranslation = currentTranslation;
       }
-      if (simulatedEvent.type == "mouseup") {
-      $('#'+eventID+' .slides ul').removeClass('notransition');
-        if (initialX - touch.screenX >= 0) {
-          if (pos+1!==$('#'+eventID+' .slides ul').find('li').length) {
+      if (event.type == "touchend") {
+        console.log("end: "+direction);
+        $('#'+eventID+' .slides ul').removeClass('notransition');
+        if (direction >= 0) {
+          if (pos+1 !== $('#'+eventID+' .slides ul').find('li').length) {
             pos++
           } 
         }
         else {
           pos--
-          if (pos<0) {
+          if (pos < 0) {
             pos = 0
           }
         }
-        slides(eventID, pos)
+        slides(eventID, pos);
       }
     }   
-}
-
-function init() {
-    document.addEventListener("touchstart", touchHandler, true);
-    document.addEventListener("touchmove", touchHandler, true);
-    document.addEventListener("touchend", touchHandler, true);
-    document.addEventListener("touchcancel", touchHandler, true);
 }
 
 window.addEventListener('orientationchange', onOrientationChange);
@@ -90,7 +77,10 @@ window.addEventListener('orientationchange', onOrientationChange);
 onOrientationChange();
 
 $(document).ready(function(){	
-  init()
+  document.addEventListener("touchstart", touchHandler, true);
+  document.addEventListener("touchmove", touchHandler, true);
+  document.addEventListener("touchend", touchHandler, true);
+  document.addEventListener("touchcancel", touchHandler, true);
     //once first image is loaded, show it and remove loading graphic
 	$('.slides').each(function(){
 	    $(this).find('img').load(function(){
