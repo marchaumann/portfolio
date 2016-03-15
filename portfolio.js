@@ -4,7 +4,7 @@ var currentTranslation = 0;
 var direction = 0;
 
 function slides(id,pos) {
-  console.log(pos)
+  // console.log(pos)
     $('#'+id+' .slidecaption:not(.single)').removeClass('shown');
     $('#'+id).find('.slidecaption').eq(pos).addClass('shown');
     $('#'+id).find('.slides li').removeClass('shown');
@@ -56,20 +56,23 @@ function touchHandler(event) {
       }
       if (event.type == "touchend") {
         event.preventDefault();
-        console.log("end: "+direction);
+        // console.log("end: "+direction);
         $('#'+eventID+' .slides ul').removeClass('notransition');
-        if ((initialX == touch.screenX || direction >= 0) && pos+1 !== $('#'+eventID+' .slides ul').find('li').length) {
+        if ((initialX == touch.screenX || direction >= 0 && currentTranslation > 30) && pos+1 !== $('#'+eventID+' .slides ul').find('li').length) {
           pos++;
           slides(eventID, pos);
         }
-        else if ((initialX == touch.screenX || direction >= 0) && pos+1 == $('#'+eventID+' .slides ul').find('li').length) {
+        else if ((initialX == touch.screenX || direction >= 0 && currentTranslation > 30) && pos+1 == $('#'+eventID+' .slides ul').find('li').length) {
           console.log("end of slides");
           $('#'+eventID+' .slides ul').css('-webkit-transform','translateX('+(-(pos*$('.slides li').width()+20))+'px)');
           setTimeout(function(){
             $('#'+eventID+' .slides ul').css('-webkit-transform','translateX('+(-(pos*$('.slides li').width()))+'px)')
           },100)
         }
-        else {
+        else if (Math.abs(currentTranslation) < 30) {
+          slides(eventID, pos);
+        }
+        else if (direction < 0 && Math.abs(currentTranslation) > 30) {
           pos--
           if (pos < 0) {
             pos = 0
