@@ -49,7 +49,7 @@ function touchHandler(event) {
       }
       if (event.type == "touchmove") {
         currentTranslation = initialX - touch.screenX;
-        console.log(initialTranslation+", "+currentTranslation)
+        // console.log(initialTranslation+", "+currentTranslation)
         $('#'+eventID+' .slides ul').css('-webkit-transform','translateX('+(-(pos*$('.slides li').width()+currentTranslation))+'px)');
         direction = currentTranslation - initialTranslation;
         initialTranslation = currentTranslation;
@@ -63,7 +63,7 @@ function touchHandler(event) {
           slides(eventID, pos);
         }
         else if ((initialX == touch.screenX || direction >= 0 && currentTranslation > 30) && pos+1 == $('#'+eventID+' .slides ul').find('li').length) {
-          console.log("end of slides");
+          // console.log("end of slides");
           $('#'+eventID+' .slides ul').css('-webkit-transform','translateX('+(-(pos*$('.slides li').width()+20))+'px)');
           setTimeout(function(){
             $('#'+eventID+' .slides ul').css('-webkit-transform','translateX('+(-(pos*$('.slides li').width()))+'px)')
