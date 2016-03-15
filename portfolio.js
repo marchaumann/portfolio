@@ -4,6 +4,7 @@ var currentTranslation = 0;
 var direction = 0;
 
 function slides(id,pos) {
+  console.log(pos)
     $('#'+id+' .slidecaption:not(.single)').removeClass('shown');
     $('#'+id).find('.slidecaption').eq(pos).addClass('shown');
     $('#'+id).find('.slides li').removeClass('shown');
@@ -54,20 +55,29 @@ function touchHandler(event) {
         initialTranslation = currentTranslation;
       }
       if (event.type == "touchend") {
+        event.preventDefault();
         console.log("end: "+direction);
         $('#'+eventID+' .slides ul').removeClass('notransition');
-        if (direction >= 0) {
-          if (pos+1 !== $('#'+eventID+' .slides ul').find('li').length) {
-            pos++
-          } 
+        if ((initialX == touch.screenX || direction >= 0) && pos+1 !== $('#'+eventID+' .slides ul').find('li').length) {
+          pos++;
+          slides(eventID, pos);
+        }
+        else if ((initialX == touch.screenX || direction >= 0) && pos+1 == $('#'+eventID+' .slides ul').find('li').length) {
+          console.log("end of slides");
+          $('#'+eventID+' .slides ul').css('-webkit-transform','translateX('+(-(pos*$('.slides li').width()+20))+'px)');
+          setTimeout(function(){
+            $('#'+eventID+' .slides ul').css('-webkit-transform','translateX('+(-(pos*$('.slides li').width()))+'px)')
+          },100)
         }
         else {
           pos--
           if (pos < 0) {
             pos = 0
           }
+          slides(eventID, pos);
         }
-        slides(eventID, pos);
+        // console.log(pos);
+        
       }
     }   
 }
@@ -89,7 +99,7 @@ $(document).ready(function(){
 	    });
 	});
 	$('.dots span:first-child').addClass('active');
-	$('.slides:not(.single)').click(function(){
+	$('.slides:not(.single)').mouseup(function(){
         id = $(this).parents('article').attr('id');
         //for clicking image once on the last slide
         if($(this).find('.shown').prevAll().length+1==$(this).find('li').length){
@@ -98,6 +108,7 @@ $(document).ready(function(){
         else {
            pos = $(this).find('.shown').prevAll().length+1; 
         };
+    console.log("click");
 		slides(id,pos)
 	});
 	$('.dots span').click(function(){
